@@ -11,7 +11,7 @@ authors:
     affiliation: Agentschap Onroerend Erfgoed
     orcid: 'https://orcid.org/0000-0002-8153-2978'
 repository-code: 'https://github.com/OnroerendErfgoed/abacus'
-doi: 
+doi: 10.5281/zenodo.6533855
 abstract: >-
   Abacus bevat code en scripts om onroerend erfgoed uit de 
   Inventaris Onroerend Erfgoed te tellen.
