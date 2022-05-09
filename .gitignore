@@ -1,0 +1,4 @@
+*.dbm
+*.lock
+__pycache__
+output
