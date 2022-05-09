@@ -1,0 +1,38 @@
+cff-version: 1.2.0
+title: Onroerend Erfgoed Abacus
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Koen
+    family-names: Van Daele
+    email: koen.vandaele@vlaanderen.be
+    affiliation: Agentschap Onroerend Erfgoed
+    orcid: 'https://orcid.org/0000-0002-8153-2978'
+repository-code: 'https://github.com/OnroerendErfgoed/abacus'
+doi: 
+abstract: >-
+  Abacus bevat code en scripts om onroerend erfgoed uit de 
+  Inventaris Onroerend Erfgoed te tellen.
+keywords:
+  - Python
+  - REST
+  - JSON
+  - Onroerend erfgoed
+  - Inventaris
+references:
+  - doi: 10.5281/zenodo.6508738
+    type: software
+    title: Onroerend Erfgoed Scriptorium
+    version: 1.1.0
+    date-published: "2022-05-01"
+    authors:
+      - given-names: Koen
+        family-names: Van Daele
+        email: koen.vandaele@vlaanderen.be
+        affiliation: Flanders Heritage Agency
+        orcid: 'https://orcid.org/0000-0002-8153-2978'
+license: CC-BY-4.0
+version: 1.0.0
+date-released: "2022-05-09"
