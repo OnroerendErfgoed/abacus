@@ -1,5 +1,7 @@
 # Onroerend Erfgoed Abacus
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6533854.svg)](https://doi.org/10.5281/zenodo.6533854)
+
 Scripts om erfgoed uit de [Inventaris Onroerend
 Erfgoed](https://inventaris.onroerenderfgodd.be) correct te helpen tellen.
 
