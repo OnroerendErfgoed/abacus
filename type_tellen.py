@@ -60,6 +60,8 @@ CONCEPT = 53
 #CONCEPT = 192
 # lagere scholen
 #CONCEPT = 259
+# hoeven
+#CONCEPT = 190
 
 # NOT niets, alles dus
 NOT_CONCEPT = []
@@ -94,12 +96,12 @@ def generate_csv(
     query = {}
 
     if discipline:
-        query['discipline']: '[%s]' % (','.join([str(d) for d in discipline]))
+        query['discipline'] = '[%s]' % (','.join([str(d) for d in discipline]))
     if erfgoedwaarde:
         query['erfgoedwaarde'] = erfgoedwaarde
     if concept:
         query['typologie'] = [concept.id]
-        not_concept = [f'-%s{nc}' for nc.id in not_concept]
+        not_concept = [f'-{nc.id}' for nc in not_concept]
         query['typologie'].extend(not_concept)
     if rechtsgevolgen:
         query['rechtsgevolgen'] = rechtsgevolgen
@@ -122,16 +124,18 @@ def generate_csv(
             'naam': e['naam'],
             'omvang': e['omvang']['naam'],
             'disciplines': "".join([d['naam'][0] for d in e['disciplines']]),
-            'locatie_samenvatting': e['locatie_samenvatting'],
-            'provincie': e['locatie']['provincie'],
-            'gemeente': e['locatie']['gemeente'],
-            'deelgemeente': e['locatie']['deelgemeente'],
-            'straat': e['locatie']['straat']
+            'locatie_samenvatting': e['locatie_samenvatting']
         }
         extra_e = get_erfgoedobject(e['self'], session=session)
         exp.update({
             'erfgoedwaarde': 'ja' if extra_e['erfgoedwaarde'] else 'nee',
-            'fysieke staat': extra_e['locatie']['status']['naam']
+            'fysieke staat': extra_e['fysieke_status']['naam']
+        })
+        exp.update({
+            'provincie': extra_e['locatie']['provincie'],
+            'gemeente': extra_e['locatie']['gemeente'],
+            'deelgemeente': extra_e['locatie']['deelgemeente'],
+            'straat': extra_e['locatie']['straat']
         })
         exp.update(analyseer_aanduidingen(extra_e))
         exp.update(analyseer_kenmerkgroepen(extra_e, concept))

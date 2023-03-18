@@ -38,7 +38,7 @@ def fetch_query(url, parameters, SSO = None, session=None):
     if SSO:
         headers['OpenAmSSOID'] = SSO
 
-    logging.info('Opzoeken %s', url)
+    logging.info('Opzoeken %s met %s', url, parameters)
 
     res = session.get(url, params=parameters, headers=headers)
     res.raise_for_status()
