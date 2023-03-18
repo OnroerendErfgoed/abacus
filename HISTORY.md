@@ -1,12 +1,15 @@
+# next version
+
+Fixed some bugs and updated to the latest version of the inventaris service.
+
 # 1.0.2 (2022-05-10)
 
-Wat opkuiswerk en betere documentatie geschreven.
+Some cleaning and extra documentation.
 
 # 1.0.1 (2022-05-09)
 
-Prutsen met Zenodo releases. Functioneel identiek aan de vorige versie.
+Mucking about with Zenodo releases. Functionally identical to the previous version.
 
 # 1.0.0 (2022-05-09)
 
-Eerste versie, op basis van oudere code.
-
+First version, based on older code.
