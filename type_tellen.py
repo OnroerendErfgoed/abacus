@@ -1,7 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 '''
-Een kleine analyse van erfgoed uit de inventaris naar beschermingsstatuut.
+The script allows creating data files based on the Flanders inventory of 
+immovable heritage (https://inventaris.onroerenderfgoed.be) to count 
+heritage and how protected it is.
 '''
 
 from skosprovider_atramhasis.providers import AtramhasisProvider
@@ -62,6 +64,8 @@ CONCEPT = 53
 #CONCEPT = 259
 # hoeven
 #CONCEPT = 190
+# orgels
+#CONCEPT = 1780
 
 # NOT niets, alles dus
 NOT_CONCEPT = []
