@@ -1,4 +1,4 @@
-# next version
+# 1.0.3 (2023-05-25)
 
 Fixed some bugs and updated to the latest version of the inventaris service.
 
