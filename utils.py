@@ -156,17 +156,17 @@ def analyseer_aanduidingen(erfgoedobject):
     van een erfgoedobject te bepalen.
     '''
     aanduidingen = [a for a in erfgoedobject['relaties'] if a['verwant']['id'] == 5 and is_geldig(a)]
+    monumenten = [a for a in aanduidingen if a['aanduidingsobjecttype'] in ['Beschermd monument']]
 
     ret = {
-        'aangeduid': len([a for a in aanduidingen if is_geldig(a)]),
+        'aangeduid': len(aanduidingen),
         'beschermd': len([a for a in aanduidingen if a['bescherming']]),
         'vastgesteld': len([a for a in aanduidingen if a['vaststelling']]),
         'erfgoedlandschap': len([a for a in aanduidingen if a['aanduidingsobjecttype'] in
             ['Erfgoedlandschap']]),
         'unesco': len([a for a in aanduidingen if a['aanduidingsobjecttype'] in
             ['Unesco werelderfgoed kernzone', 'Unesco werelderfgoed bufferzone']]),
-        'monument': len([a for a in aanduidingen if a['aanduidingsobjecttype'] in
-            ['Beschermd monument']]),
+        'monument': len(monumenten),
         'sdgezicht': len([a for a in aanduidingen if a['aanduidingsobjecttype'] in
             ['Beschermd stads- of dorpsgezicht', 'Beschermd stads- of dorpsgezicht, intrinsiek', 'Beschermd stads- of dorpsgezicht, ondersteunend']]),
         'landschap': len([a for a in aanduidingen if a['aanduidingsobjecttype'] in
@@ -192,6 +192,36 @@ def analyseer_aanduidingen(erfgoedobject):
         ret['landschap'] > 0 and \
         ret ['sdgezicht'] == 0 and \
         ret['monument'] == 0 else 'nee'
+
+    aantal_volledig_m = 0
+    aantal_deels_m = 0
+    aantal_dv_m = 0
+    orgel = ''
+    for m in monumenten:
+        if m['relatietype']['id'] == 14:
+            aantal_volledig_m += 1
+        elif m['relatietype']['id'] == 18:
+            aantal_deels_m += 1
+            if 'orgel' in m['omschrijving']:
+                orgel = '(orgel?)'
+        elif m['relatietype']['id'] == 20:
+            aantal_dv_m += 1
+
+    ret['dubbel monument'] = 'nee' if len(monumenten) else 'nvt'
+    if aantal_volledig_m > 0 and aantal_deels_m > 0:
+        ret['dubbel monument'] = f'{aantal_volledig_m} keer volledig als MON, {aantal_deels_m} keer deels als MON {orgel}'
+    elif aantal_volledig_m > 0 and aantal_dv_m > 0:
+        ret['dubbel monument'] = f'{aantal_volledig_m} keer volledig als MON, {aantal_dv_m} keer deel van een MON'
+    elif aantal_volledig_m > 1:
+        ret['dubbel monument'] = f'{aantal_volledig_m} keer volledig als MON'
+
+    ret['volledig monument'] = 'ja' if len(monumenten) else 'nvt'
+    if aantal_volledig_m == 0 and aantal_dv_m == 0 and aantal_deels_m > 0:
+        ret['volledig monument'] = f'nee, wel {aantal_deels_m} keer deels als MON {orgel}'
+    elif aantal_volledig_m == 0 and aantal_dv_m > 0 and aantal_deels_m > 0:
+        ret['volledig monument'] = f'mogelijk, wel {aantal_dv_m} keer deel van MON en {aantal_deels_m} keer deels als MON {orgel}'
+    elif aantal_volledig_m == 0 and aantal_dv_m > 0:
+        ret['volledig monument'] = f'waarschijnlijk, {aantal_dv_m} keer deel van MON'
 
     return ret
 

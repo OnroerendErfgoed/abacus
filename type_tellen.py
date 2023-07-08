@@ -161,6 +161,7 @@ def generate_csv(
             'omvat', 'deel van',
             'aangeduid', 'vastgesteld', 'beschermd', 'erfgoedlandschap', 'unesco',
             'monument', 'enkel monument',
+            'volledig monument', 'dubbel monument',
             'sdgezicht', 'enkel sdgezicht',
             'landschap', 'enkel landschap',
             'site', 'overgangszone',
