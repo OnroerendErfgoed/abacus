@@ -156,25 +156,25 @@ def analyseer_aanduidingen(erfgoedobject):
     van een erfgoedobject te bepalen.
     '''
     aanduidingen = [a for a in erfgoedobject['relaties'] if a['verwant']['id'] == 5 and is_geldig(a)]
-    monumenten = [a for a in aanduidingen if a['aanduidingsobjecttype'] in ['Beschermd monument']]
+    monumenten = [a for a in aanduidingen if a['aanduidingsobjecttype'] in ['beschermd monument']]
 
     ret = {
         'aangeduid': len(aanduidingen),
         'beschermd': len([a for a in aanduidingen if a['bescherming']]),
         'vastgesteld': len([a for a in aanduidingen if a['vaststelling']]),
         'erfgoedlandschap': len([a for a in aanduidingen if a['aanduidingsobjecttype'] in
-            ['Erfgoedlandschap']]),
+            ['erfgoedlandschap']]),
         'unesco': len([a for a in aanduidingen if a['aanduidingsobjecttype'] in
             ['Unesco werelderfgoed kernzone', 'Unesco werelderfgoed bufferzone']]),
         'monument': len(monumenten),
         'sdgezicht': len([a for a in aanduidingen if a['aanduidingsobjecttype'] in
-            ['Beschermd stads- of dorpsgezicht', 'Beschermd stads- of dorpsgezicht, intrinsiek', 'Beschermd stads- of dorpsgezicht, ondersteunend']]),
+            ['beschermd stads- of dorpsgezicht', 'beschermd stads- of dorpsgezicht, intrinsiek', 'beschermd stads- of dorpsgezicht, ondersteunend']]),
         'landschap': len([a for a in aanduidingen if a['aanduidingsobjecttype'] in
-            ['Beschermd cultuurhistorisch landschap']]),
+            ['beschermd cultuurhistorisch landschap']]),
         'site': len([a for a in aanduidingen if a['aanduidingsobjecttype'] in
-            ['Beschermde archeologische site']]),
+            ['beschermde archeologische site']]),
         'overgangszone': len([a for a in aanduidingen if a['aanduidingsobjecttype'] in
-            ['Overgangszone']]),
+            ['overgangszone']]),
         'ongeldige beschermingen': len([a for a in erfgoedobject['relaties'] if
             a['verwant']['id'] == 5 and a['bescherming'] and not is_geldig(a)])
     }
