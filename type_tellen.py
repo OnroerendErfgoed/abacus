@@ -19,6 +19,8 @@ from datetime import datetime
 
 from utils import fetch_query
 from utils import get_erfgoedtypes
+from utils import get_stijlen
+from utils import get_dateringen
 from utils import get_erfgoedobject
 from utils import analyseer_aanduidingen
 from utils import analyseer_kenmerkgroepen
@@ -30,30 +32,30 @@ DISCIPLINE = None
 # Alles behalve varend
 #DISCIPLINE = [1,2,3]
 # Enkel bouwkundig
-#DISCIPLINE = [2]
+# DISCIPLINE = [2]
 
 # Alles ongeacht erfgoedwaarde
-ERFGOEDWAARDE = None
-#Alles met erfgoedwaarde
-#ERFGOEDWAARDE = True
-#Alles zonder erfgoedwaarde
-#ERFGOEDWAARDE = False
+# ERFGOEDWAARDE = None
+# Alles met erfgoedwaarde
+ERFGOEDWAARDE = True
+# Alles zonder erfgoedwaarde
+# ERFGOEDWAARDE = False
 
 # Alles ongeacht de rechtsgevolgen
-# RECHTSGEVOLGEN = None
+RECHTSGEVOLGEN = None
 # Alles wat beschermd is
-RECHTSGEVOLGEN = 'beschermd'
+# RECHTSGEVOLGEN = 'beschermd'
 
 # Alles ongeacht type
 # Opgelet, niet gebruiken zonder combinatie met andere parameters.
 # Dit is een zeer zware vraag die uren werk kan vragen
-#CONCEPT = None
+# CONCEPT = None
 # kerken
 #CONCEPT = 1005
 # katholieke kerken
 #CONCEPT = 230
 # begijnhoven
-CONCEPT = 53
+ CONCEPT = 53
 # eet- en drinkgelegenheden
 #CONCEPT = 881
 # windmolens
@@ -71,6 +73,12 @@ CONCEPT = 53
 NOT_CONCEPT = []
 # NOT abdijkerken, begijnhofkerken, kloosterkerken
 #NOT_CONCEPT = [6, 52, 242]
+
+# Alle stijlen en culturen
+STIJL = None
+
+# Alle dateringen
+DATERING = None
 
 # URLs
 INVENTARIS_HOST = 'https://inventaris.onroerenderfgoed.be/'
@@ -92,7 +100,9 @@ logging.basicConfig(
 def generate_csv(
         discipline = None, erfgoedwaarde = None,
         rechtsgevolgen = None,
-        concept = None, not_concept = []
+        concept = None, not_concept = [],
+        stijl = None,
+        datering = None
     ):
 
     session = requests.Session()
@@ -109,6 +119,10 @@ def generate_csv(
         query['typologie'].extend(not_concept)
     if rechtsgevolgen:
         query['rechtsgevolgen'] = rechtsgevolgen
+    if datering:
+        query['datering'] = [datering.id]
+    if stijl:
+        query['stijl'] = [stijl.id]
 
     logging.info('Uit te voeren query: %s', query)
 
@@ -200,11 +214,36 @@ def main():
         concept = None
         not_concept = []
 
+    if STIJL:
+        logging.info(f'Ophalen van Stijl {STIJL}')
+        stijlen = get_stijlen()
+        stijl = stijlen.get_by_id(STIJL)
+
+
+        tpl = 'Stijl: %s (%s)'
+        logging.info(tpl % (stijl.label().label, stijl.uri))
+    else:
+        stijl = None
+
+    if DATERING:
+        logging.info(f'Ophalen van Datering {DATERING}')
+        dateringen = get_dateringen()
+        datering = dateringen.get_by_id(DATERING)
+
+
+        tpl = 'Datering: %s (%s)'
+        logging.info(tpl % (datering.label().label, datering.uri))
+
+    else:
+        datering = None
+
     logging.info(f'Start genereren CSV')
     generate_csv(
         DISCIPLINE, ERFGOEDWAARDE,
         RECHTSGEVOLGEN,
-        concept, not_concept
+        concept, not_concept,
+        stijl,
+        datering
     )
 
 if __name__ == "__main__":

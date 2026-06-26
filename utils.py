@@ -141,6 +141,48 @@ def get_erfgoedtypes():
 
     return erfgoedtypes
 
+stijlen = None
+
+def get_stijlen():
+    global stijlen
+    if stijlen is not None:
+        return stijlen
+    # Keep cache in between runs of the script
+    # Value is considered valid for 1 week
+    stijlen = AtramhasisProvider(
+        {'id': 'vioe-stijlen)'},
+        base_url='https://thesaurus.onroerenderfgoed.be',
+        scheme_id='STIJLEN_EN_CULTUREN',
+        cache_config={
+            'cache.backend': 'dogpile.cache.dbm',
+            'cache.expiration_time': 60 * 60 * 24 * 7,
+            'cache.arguments.filename': 'stijlen.dbm'
+        }
+    )
+
+    return stijlen
+
+dateringen = None
+
+def get_dateringen():
+    global dateringen
+    if dateringen is not None:
+        return dateringen
+    # Keep cache in between runs of the script
+    # Value is considered valid for 1 week
+    dateringen = AtramhasisProvider(
+        {'id': 'vioe-dateringen)'},
+        base_url='https://thesaurus.onroerenderfgoed.be',
+        scheme_id='DATERINGEN',
+        cache_config={
+            'cache.backend': 'dogpile.cache.dbm',
+            'cache.expiration_time': 60 * 60 * 24 * 7,
+            'cache.arguments.filename': 'dateringen.dbm'
+        }
+    )
+
+    return dateringen
+
 def is_geldig(aanduiding):
     '''
     Is een aanduidingsobject geldig of niet?
