@@ -150,47 +150,61 @@ def is_geldig(aanduiding):
         and (not 'geldigheid_einde' in aanduiding \
         or datetime.strptime(aanduiding['geldigheid_einde'], '%d-%m-%Y') > nu ) \
 
+def _get_aanduidingstype_uri(aanduiding):
+    '''
+    Veilig de aanduidingstype URI ophalen met .get()
+    '''
+    return aanduiding.get('aanduidingstype', {}).get('uri')
+
 def analyseer_aanduidingen(erfgoedobject):
     '''
     Analyseer de relaties met aanduidingsobjecten om de beschermingstoestand
     van een erfgoedobject te bepalen.
     '''
+    # Mappings van aanduidingstypes URIs
+    MONUMENT_URI = 'https://id.erfgoed.net/thesauri/aanduidingstypes/1'
+    ERFGOEDLANDSCHAP_URI = 'https://id.erfgoed.net/thesauri/aanduidingstypes/17'
+    UNESCO_KERNZONE_URI = 'https://id.erfgoed.net/thesauri/aanduidingstypes/19'
+    UNESCO_BUFFERZONE_URI = 'https://id.erfgoed.net/thesauri/aanduidingstypes/20'
+    SDGEZICHT_URI = 'https://id.erfgoed.net/thesauri/aanduidingstypes/3'
+    SDGEZICHT_INTRINSIEK_URI = 'https://id.erfgoed.net/thesauri/aanduidingstypes/7'
+    SDGEZICHT_ONDERSTEUNEND_URI = 'https://id.erfgoed.net/thesauri/aanduidingstypes/8'
+    LANDSCHAP_URI = 'https://id.erfgoed.net/thesauri/aanduidingstypes/2'
+    ARCH_SITE_URI = 'https://id.erfgoed.net/thesauri/aanduidingstypes/4'
+    OVERGANGSZONE_URI = 'https://id.erfgoed.net/thesauri/aanduidingstypes/6'
+    
     aanduidingen = [a for a in erfgoedobject['relaties'] if a['verwant']['id'] == 5 and is_geldig(a)]
-    monumenten = [a for a in aanduidingen if a['aanduidingsobjecttype'] in ['Beschermd monument']]
+    monumenten = [a for a in aanduidingen if _get_aanduidingstype_uri(a) == MONUMENT_URI]
 
     ret = {
         'aangeduid': len(aanduidingen),
         'beschermd': len([a for a in aanduidingen if a['bescherming']]),
         'vastgesteld': len([a for a in aanduidingen if a['vaststelling']]),
-        'erfgoedlandschap': len([a for a in aanduidingen if a['aanduidingsobjecttype'] in
-            ['Erfgoedlandschap']]),
-        'unesco': len([a for a in aanduidingen if a['aanduidingsobjecttype'] in
-            ['Unesco werelderfgoed kernzone', 'Unesco werelderfgoed bufferzone']]),
+        'erfgoedlandschap': len([a for a in aanduidingen if _get_aanduidingstype_uri(a) == ERFGOEDLANDSCHAP_URI]),
+        'unesco': len([a for a in aanduidingen if _get_aanduidingstype_uri(a) in
+            [UNESCO_KERNZONE_URI, UNESCO_BUFFERZONE_URI]]),
         'monument': len(monumenten),
-        'sdgezicht': len([a for a in aanduidingen if a['aanduidingsobjecttype'] in
-            ['Beschermd stads- of dorpsgezicht', 'Beschermd stads- of dorpsgezicht, intrinsiek', 'Beschermd stads- of dorpsgezicht, ondersteunend']]),
-        'landschap': len([a for a in aanduidingen if a['aanduidingsobjecttype'] in
-            ['Beschermd cultuurhistorisch landschap']]),
-        'site': len([a for a in aanduidingen if a['aanduidingsobjecttype'] in
-            ['Beschermde archeologische site']]),
-        'overgangszone': len([a for a in aanduidingen if a['aanduidingsobjecttype'] in
-            ['Overgangszone']]),
+        'sdgezicht': len([a for a in aanduidingen if _get_aanduidingstype_uri(a) in
+            [SDGEZICHT_URI, SDGEZICHT_INTRINSIEK_URI, SDGEZICHT_ONDERSTEUNEND_URI]]),
+        'landschap': len([a for a in aanduidingen if _get_aanduidingstype_uri(a) == LANDSCHAP_URI]),
+        'site': len([a for a in aanduidingen if _get_aanduidingstype_uri(a) == ARCH_SITE_URI]),
+        'overgangszone': len([a for a in aanduidingen if _get_aanduidingstype_uri(a) == OVERGANGSZONE_URI]),
         'ongeldige beschermingen': len([a for a in erfgoedobject['relaties'] if
             a['verwant']['id'] == 5 and a['bescherming'] and not is_geldig(a)])
     }
     ret['enkel monument'] = 'ja' if \
         ret['monument'] > 0 and \
-        ret ['sdgezicht'] == 0 and \
+        ret['sdgezicht'] == 0 and \
         ret['landschap'] == 0 else 'nee'
 
     ret['enkel sdgezicht'] = 'ja' if \
         ret['sdgezicht'] > 0 and \
-        ret ['monument'] == 0 and \
+        ret['monument'] == 0 and \
         ret['landschap'] == 0 else 'nee'
 
     ret['enkel landschap'] = 'ja' if \
         ret['landschap'] > 0 and \
-        ret ['sdgezicht'] == 0 and \
+        ret['sdgezicht'] == 0 and \
         ret['monument'] == 0 else 'nee'
 
     aantal_volledig_m = 0
